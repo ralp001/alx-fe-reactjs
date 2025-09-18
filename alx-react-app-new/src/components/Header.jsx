@@ -1,10 +1,11 @@
-// src/Header.jsx
+// src/components/Header.jsx
+
 import React from 'react';
 
 const Header = () => {
   return (
-    <header style={{ backgroundColor: '#282c34', color: 'white', padding: '20px', textAlign: 'center' }}>
-      <h1>My React App</h1>
+    <header style={{ backgroundColor: 'navy', color: 'white', textAlign: 'center' }}>
+      <h1>My Favorite Cities</h1>
     </header>
   );
 };
