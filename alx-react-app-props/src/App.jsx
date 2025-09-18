@@ -1,4 +1,5 @@
 // src/App.jsx
+import React from {useState, useEffect} from 'react';
 import ProfilePage from './components/ProfilePage';
 import UserContext from './context/UserContext';
 
