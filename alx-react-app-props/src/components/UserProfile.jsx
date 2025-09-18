@@ -1,11 +1,15 @@
-import React from 'react';
+// src/components/UserProfile.jsx
 
-const UserProfile = (props) => {
+import React, { useContext } from 'react';
+import UserContext from '../context/UserContext'; // Make sure the path is correct
+
+const UserProfile = () => {
+  const userData = useContext(UserContext);
+  
   return (
-    <div>
-      <h2>{props.name}</h2>
-      <p>Age: {props.age}</p>
-      <p>Bio: {props.bio}</p>
+    <div style={{ border: '1px solid gray', padding: '10px', margin: '10px' }}>
+      <h2 style={{ color: 'blue' }}>{userData.name}</h2>
+      <p>Email: {userData.email}</p>
     </div>
   );
 };

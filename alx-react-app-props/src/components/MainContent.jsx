@@ -1,12 +1,14 @@
+// src/MainContent.jsx
 import React from 'react';
+import UserProfile from './UserProfile';
 
-function MainContent() {
+const MainContent = () => {
   return (
-    <main>
+    <main style={{ padding: '20px' }}>
       <p>I love to visit New York, Paris, and Tokyo.</p>
+      <UserProfile />
     </main>
   );
-}
+};
 
 export default MainContent;
-
