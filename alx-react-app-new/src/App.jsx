@@ -1,6 +1,7 @@
 import React from 'react';
 import UserProfile from './components/UserProfile';
 import './App.css'; // Assuming you have an App.css file
+import Counter from './components/Counter';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         age="25" 
         bio="Loves hiking and photography" 
       />
+      <Counter />
     </div>
   );
 }
