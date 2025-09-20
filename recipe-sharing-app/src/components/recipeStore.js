@@ -1,7 +1,5 @@
-// src/components/recipeStore.js
 import { create } from 'zustand';
 
-// The Zustand store. It holds the state and actions.
 export const useRecipeStore = create((set) => ({
   // State: An array to hold our recipes
   recipes: [],
@@ -11,6 +9,9 @@ export const useRecipeStore = create((set) => ({
     set((state) => ({
       recipes: [...state.recipes, recipe],
     })),
+
+  // Action: Replace the entire recipes list
+  setRecipes: (recipes) => set({ recipes }),
 
   // Action: Remove a recipe from the store based on its ID or name
   removeRecipe: (recipeId) =>
