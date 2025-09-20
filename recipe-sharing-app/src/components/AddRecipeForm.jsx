@@ -1,40 +1,38 @@
-import { useState } from 'react';
-import useRecipeStore from '../store/recipeStore';
+// src/components/AddRecipeForm.jsx
+import React, { useState } from 'react';
+import { useRecipeStore } from './recipeStore'; // Import the new store file
 
-const AddRecipeForm = () => {
-  const addRecipe = useRecipeStore(state => state.addRecipe);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+export function AddRecipeForm() {
+  const addRecipe = useRecipeStore((state) => state.addRecipe);
+  const [name, setName] = useState('');
+  const [ingredients, setIngredients] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!title || !description) return;
-    addRecipe({ id: Date.now(), title, description });
-    setTitle('');
-    setDescription('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name || !ingredients) return;
+
+    // Use the addRecipe action to update the state
+    addRecipe({ id: Date.now(), name, ingredients: ingredients.split(',').map(item => item.trim()) });
+    setName('');
+    setIngredients('');
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px', margin: 'auto' }}>
-      <h2>Add a New Recipe</h2>
+    // Your form JSX here
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Recipe Title"
-        style={{ padding: '8px' }}
+        placeholder="Recipe Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Recipe Description"
-        style={{ padding: '8px', minHeight: '100px' }}
+      <input
+        type="text"
+        placeholder="Ingredients (comma separated)"
+        value={ingredients}
+        onChange={(e) => setIngredients(e.target.value)}
       />
-      <button type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', cursor: 'pointer' }}>
-        Add Recipe
-      </button>
+      <button type="submit">Add Recipe</button>
     </form>
   );
-};
-
-export default AddRecipeForm;
+}
