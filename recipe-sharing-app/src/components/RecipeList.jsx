@@ -1,17 +1,13 @@
+// src/components/RecipeList.jsx
+// ... (existing imports)
+import { useState } from 'react';
 import useRecipeStore from '../store/recipeStore';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const RecipeList = () => {
-  const { recipes, filteredRecipes, searchTerm, filterRecipes } = useRecipeStore();
-
-  // Trigger filtering whenever recipes or searchTerm changes
-  useEffect(() => {
-    filterRecipes();
-  }, [recipes, searchTerm, filterRecipes]);
-
-  // Determine which list to display
+  // ... (existing state and useEffect)
   const recipesToDisplay = searchTerm ? filteredRecipes : recipes;
+  const { favorites, addFavorite, removeFavorite } = useRecipeStore();
 
   return (
     <div>
@@ -20,11 +16,20 @@ const RecipeList = () => {
         <p>No recipes found.</p>
       ) : (
         recipesToDisplay.map(recipe => (
-          <Link to={`/recipes/${recipe.id}`} key={recipe.id}>
-            <div style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
+          <div key={recipe.id} style={{ display: 'flex', alignItems: 'center', margin: '10px', border: '1px solid #ccc', padding: '10px' }}>
+            <Link to={`/recipes/${recipe.id}`} style={{ flexGrow: 1, textDecoration: 'none', color: 'black' }}>
               <h3>{recipe.title}</h3>
-            </div>
-          </Link>
+            </Link>
+            <button onClick={() => {
+              if (favorites.includes(recipe.id)) {
+                removeFavorite(recipe.id);
+              } else {
+                addFavorite(recipe.id);
+              }
+            }}>
+              {favorites.includes(recipe.id) ? '❤️' : '♡'}
+            </button>
+          </div>
         ))
       )}
     </div>
