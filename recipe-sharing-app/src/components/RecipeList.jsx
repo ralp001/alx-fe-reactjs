@@ -1,26 +1,24 @@
 // src/components/RecipeList.jsx
-import React from 'react';
-import { useRecipeStore } from './recipeStore'; // Import the new store file
 
-export function RecipeList() {
-  const { recipes, removeRecipe } = useRecipeStore();
+import useRecipeStore from '../store/recipeStore';
+import { Link } from 'react-router-dom';
+
+const RecipeList = () => {
+  const recipes = useRecipeStore(state => state.recipes);
 
   return (
-    // Your list JSX here
     <div>
-      <h3>Recipe List</h3>
-      {recipes.length === 0 ? (
-        <p>No recipes added yet.</p>
-      ) : (
-        <ul>
-          {recipes.map((recipe) => (
-            <li key={recipe.id}>
-              <strong>{recipe.name}</strong>: {recipe.ingredients.join(', ')}
-              <button onClick={() => removeRecipe(recipe.id)}>Remove</button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <h2>Recipes</h2>
+      {recipes.map(recipe => (
+        // Wrap each recipe in a Link
+        <Link to={`/recipes/${recipe.id}`} key={recipe.id}>
+          <div style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
+            <h3>{recipe.title}</h3>
+          </div>
+        </Link>
+      ))}
     </div>
   );
-}
+};
+
+export default RecipeList;
