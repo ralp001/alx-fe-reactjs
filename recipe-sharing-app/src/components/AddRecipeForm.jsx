@@ -1,38 +1,36 @@
-// src/components/AddRecipeForm.jsx
-import React, { useState } from 'react';
-import { useRecipeStore } from './recipeStore'; // Import the new store file
+import { useState } from 'react';
+import useRecipeStore from '../store/recipeStore';
 
-export function AddRecipeForm() {
-  const addRecipe = useRecipeStore((state) => state.addRecipe);
-  const [name, setName] = useState('');
-  const [ingredients, setIngredients] = useState('');
+const AddRecipeForm = () => {
+  const addRecipe = useRecipeStore(state => state.addRecipe);
+  const [title, setTitle] = useState(''); // Corrected line
+  const [description, setDescription] = useState(''); // Assuming you already have this
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!name || !ingredients) return;
-
-    // Use the addRecipe action to update the state
-    addRecipe({ id: Date.now(), name, ingredients: ingredients.split(',').map(item => item.trim()) });
-    setName('');
-    setIngredients('');
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!title || !description) return;
+    addRecipe({ id: Date.now(), title, description });
+    setTitle('');
+    setDescription('');
   };
 
   return (
-    // Your form JSX here
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Recipe Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)} // Corrected line
+        placeholder="Title"
       />
-      <input
-        type="text"
-        placeholder="Ingredients (comma separated)"
-        value={ingredients}
-        onChange={(e) => setIngredients(e.target.value)}
+      <textarea // Add this element
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
       />
       <button type="submit">Add Recipe</button>
     </form>
   );
-}
+);
+};
+
+export default AddRecipeForm;
