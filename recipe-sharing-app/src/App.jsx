@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import RecipeList from './components/RecipeList';
 import AddRecipeForm from './components/AddRecipeForm';
 import RecipeDetails from './components/RecipeDetails';
+import SearchBar from './components/SearchBar'; // Import the new component
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="App" style={{ textAlign: 'center' }}>
         <header>
           <h1>Recipe Sharing App</h1>
           <nav>
@@ -20,10 +21,10 @@ function App() {
             <Route path="/" element={
               <>
                 <AddRecipeForm />
+                <SearchBar /> {/* Add the SearchBar component here */}
                 <RecipeList />
               </>
             } />
-            {/* New route for a single recipe's details */}
             <Route path="/recipes/:recipeId" element={<RecipeDetails />} />
           </Routes>
         </main>
