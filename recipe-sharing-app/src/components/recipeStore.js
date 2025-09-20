@@ -1,9 +1,13 @@
+// src/store/recipeStore.js
+
 import { create } from 'zustand';
 
 const useRecipeStore = create(set => ({
   recipes: [],
   searchTerm: '',
   filteredRecipes: [],
+  favorites: [], // Add a favorites array
+  recommendations: [], // Add a recommendations array
 
   addRecipe: (newRecipe) => set(state => ({ recipes: [...state.recipes, newRecipe] })),
   updateRecipe: (updatedRecipe) => set(state => ({
@@ -13,11 +17,7 @@ const useRecipeStore = create(set => ({
     recipes: state.recipes.filter(recipe => recipe.id !== recipeId)
   })),
   setRecipes: (recipes) => set({ recipes }),
-
-  // New action to set the search term
   setSearchTerm: (term) => set({ searchTerm: term }),
-
-  // New action to filter recipes based on the search term
   filterRecipes: () => set(state => {
     const term = state.searchTerm.toLowerCase();
     const filtered = state.recipes.filter(recipe =>
@@ -25,6 +25,28 @@ const useRecipeStore = create(set => ({
       recipe.description.toLowerCase().includes(term)
     );
     return { filteredRecipes: filtered };
+  }),
+
+  // Action to add a recipe to favorites
+  addFavorite: (recipeId) => set(state => ({
+    favorites: [...state.favorites, recipeId]
+  })),
+
+  // Action to remove a recipe from favorites
+  removeFavorite: (recipeId) => set(state => ({
+    favorites: state.favorites.filter(id => id !== recipeId)
+  })),
+
+  // Action to generate recommendations (mock logic)
+  generateRecommendations: () => set(state => {
+    const favoriteRecipes = state.recipes.filter(recipe => state.favorites.includes(recipe.id));
+    const recommended = state.recipes.filter(recipe =>
+      !state.favorites.includes(recipe.id) && // Don't recommend favorites
+      favoriteRecipes.some(favRecipe => 
+        favRecipe.description.includes('chicken') && recipe.description.includes('chicken')
+      ) // Example: Recommend recipes with similar ingredients
+    );
+    return { recommendations: recommended.slice(0, 3) }; // Show a few recommendations
   }),
 }));
 
