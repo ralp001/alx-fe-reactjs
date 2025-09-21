@@ -11,11 +11,12 @@ const Search = () => {
     event.preventDefault(); // Prevent page reload on form submission
 
     if (!username.trim()) {
-      return; // Do nothing if the input is empty
+      setError('Please enter a username.');
+      return;
     }
 
     setLoading(true);
-    setError('');
+    setError(''); // Clear previous errors
     setUser(null); // Clear previous results
 
     try {
@@ -23,9 +24,11 @@ const Search = () => {
       if (userData) {
         setUser(userData);
       } else {
+        // This is the key fix: if userData is null, set the "not found" error message
         setError("Looks like we can't find the user.");
       }
     } catch (err) {
+      // Handle any other unexpected errors from the API call
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -40,18 +43,21 @@ const Search = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter GitHub username"
+          aria-label="GitHub username"
         />
-        <button type="submit">Search</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Searching...' : 'Search'}
+        </button>
       </form>
 
-      {/* Conditional Rendering based on state */}
+      {/* Conditional Rendering */}
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
       
       {user && (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: '20px', border: '1px solid #ccc', padding: '15px', borderRadius: '8px' }}>
+          <img src={user.avatar_url} alt={`${user.login}'s avatar`} width="100" style={{ borderRadius: '50%' }} />
           <h3>{user.name || user.login}</h3>
-          <img src={user.avatar_url} alt={`${user.login}'s avatar`} width="100" />
           <p>{user.bio}</p>
           <a href={user.html_url} target="_blank" rel="noopener noreferrer">
             View Profile on GitHub

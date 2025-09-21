@@ -13,11 +13,11 @@ export const fetchUserData = async (username) => {
     const response = await axios.get(`${API_URL}/users/${username}`);
     return response.data;
   } catch (error) {
-    if (error.response && error.response.status === 404) {
+    if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
       // User not found, return null to handle this case gracefully in the component
       return null;
     }
-    // Handle other errors (e.g., network issues)
+    // Handle other errors (e.g., network issues, server errors) by re-throwing
     console.error('API Error:', error);
     throw error;
   }
