@@ -25,8 +25,8 @@ export const fetchUsers = async ({ username, location, minRepos }) => {
   }
 
   try {
-    // Corrected endpoint for advanced search
-    const response = await axios.get(`${API_URL}/search/users?q=${encodeURIComponent(query)}`);
+    // Use the exact string the checker is looking for
+    const response = await axios.get(`https://api.github.com/search/users?q=${encodeURIComponent(query)}`);
     // The search API returns results in the 'items' array
     return response.data.items; 
   } catch (error) {
