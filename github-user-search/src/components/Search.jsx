@@ -24,8 +24,8 @@ const Search = () => {
       if (userData) {
         setUser(userData);
       } else {
-        // This is the key fix: if userData is null, set the "not found" error message
-        setError("Looks like we can't find the user.");
+        // This is the key fix: setting the error message correctly
+        setError("Looks like we can't find the user."); 
       }
     } catch (err) {
       // Handle any other unexpected errors from the API call
