@@ -24,8 +24,8 @@ const Search = () => {
       if (userData) {
         setUser(userData);
       } else {
-        // This is the key fix: setting the error message correctly
-        setError("Looks like we can't find the user."); 
+        // FIXED: Match the exact expected error message
+        setError("Looks like we cant find the user"); // Removed apostrophe and period
       }
     } catch (err) {
       // Handle any other unexpected errors from the API call
