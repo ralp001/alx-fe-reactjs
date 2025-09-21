@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fetchUsers } from '../services/githubService';
+import { fetchUserData } from '../services/githubService'; // Changed import name
 
 const Search = () => {
   const [username, setUsername] = useState('');
@@ -9,21 +9,19 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // The handleSubmit function is now async to handle the API call
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setLoading(true);
     setError('');
-    setUsers([]); // Clear previous results
+    setUsers([]);
 
     try {
-      // Use await to wait for the API call to complete
-      const usersList = await fetchUsers({ username, location, minRepos });
+      // Use fetchUserData instead of fetchUsers
+      const usersList = await fetchUserData({ username, location, minRepos });
       if (usersList && usersList.length > 0) {
         setUsers(usersList);
       } else {
-        // Correct conditional rendering for no results
         setError("No users found matching your criteria.");
       }
     } catch (err) {
@@ -64,11 +62,9 @@ const Search = () => {
         </button>
       </form>
       
-      {/* Conditional rendering for loading, error, or no results */}
       {loading && <p className="mt-4 text-gray-600 text-center">Loading...</p>}
       {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
 
-      {/* Use map() to render the list of users */}
       {users.length > 0 && (
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {users.map(user => (
