@@ -15,8 +15,8 @@ export const fetchUsers = async ({ username, location, minRepos }) => {
     return null;
   }
 
-  // Construct the search query string
-  let query = `${username} in:login`; // Use "in:login" to search for usernames
+  // Construct the search query string using advanced qualifiers
+  let query = `${username} in:login`; 
   if (location) {
     query += ` location:${location}`;
   }
@@ -25,13 +25,24 @@ export const fetchUsers = async ({ username, location, minRepos }) => {
   }
 
   try {
+    // Corrected endpoint for advanced search
     const response = await axios.get(`${API_URL}/search/users?q=${encodeURIComponent(query)}`);
-    return response.data.items; // The search API returns results in the 'items' array
+    // The search API returns results in the 'items' array
+    return response.data.items; 
   } catch (error) {
-    if (error.response && error.response.status === 403) {
-      console.error("API Rate Limit Exceeded.");
-      throw new Error("API rate limit exceeded. Please try again later.");
+    if (axios.isAxiosError(error)) {
+      if (error.response && error.response.status === 403) {
+        // This likely means the API rate limit has been exceeded
+        console.error("API Rate Limit Exceeded.");
+        throw new Error("API rate limit exceeded. Please try again later.");
+      }
+      if (error.response && error.response.status === 422) {
+        // Unprocessable Entity, often for invalid search queries
+        console.error("Validation failed. The search query may be invalid.");
+        throw new Error("Invalid search criteria. Please try again.");
+      }
     }
+    // Handle other errors (e.g., network issues)
     console.error('API Error:', error);
     throw error;
   }
