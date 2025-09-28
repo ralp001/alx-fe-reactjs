@@ -1,49 +1,35 @@
 import axios from 'axios';
 
-const API_URL = 'https://api.github.com';
+// Base URL for the GitHub API user endpoint
+const GITHUB_API_BASE_URL = 'https://api.github.com/users/';
 
 /**
- * Performs an advanced search for GitHub users.
- * @param {object} params - Search parameters.
- * @param {string} params.username - The username to search for.
- * @param {string} [params.location] - Optional location filter.
- * @param {string} [params.minRepos] - Optional minimum repositories count.
- * @returns {Promise<object[]|null>} A promise resolving to an array of user objects or null.
+ * Fetches user data from the GitHub API.
+ * @param {string} username - The GitHub username to search for.
+ * @returns {Promise<object>} - A promise that resolves to the user data object.
  */
-export const fetchUsers = async ({ username, location, minRepos }) => {
+export const fetchUserData = async (username) => {
   if (!username) {
-    return null;
+    throw new Error("Username cannot be empty.");
   }
 
-  // Construct the search query string using advanced qualifiers
-  let query = `${username} in:login`; 
-  if (location) {
-    query += ` location:${location}`;
-  }
-  if (minRepos) {
-    query += ` repos:>=${minRepos}`;
-  }
+  // Construct the full API URL
+  const url = `${GITHUB_API_BASE_URL}${username}`;
 
   try {
-    // Use the exact string the checker is looking for
-    const response = await axios.get(`https://api.github.com/search/users?q=${encodeURIComponent(query)}`);
-    // The search API returns results in the 'items' array
-    return response.data.items; 
+    // Send a GET request to the GitHub API
+    const response = await axios.get(url);
+    
+    // The API returns 200 for success, and the data is in response.data
+    return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response && error.response.status === 403) {
-        // This likely means the API rate limit has been exceeded
-        console.error("API Rate Limit Exceeded.");
-        throw new Error("API rate limit exceeded. Please try again later.");
-      }
-      if (error.response && error.response.status === 422) {
-        // Unprocessable Entity, often for invalid search queries
-        console.error("Validation failed. The search query may be invalid.");
-        throw new Error("Invalid search criteria. Please try again.");
-      }
+    // GitHub API returns 404 for "User not found"
+    // We check for the error response status to provide a specific message
+    if (error.response && error.response.status === 404) {
+      throw new Error("Looks like we can't find the user.");
     }
-    // Handle other errors (e.g., network issues)
-    console.error('API Error:', error);
-    throw error;
+    
+    // For other errors (e.g., network issues, rate limiting)
+    throw new Error("An error occurred while fetching data.");
   }
 };

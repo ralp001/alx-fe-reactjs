@@ -1,85 +1,122 @@
-import React, { useState } from 'react';
-import { fetchUserData } from '../services/githubService'; // Changed import name
+import React, { useState, useCallback } from 'react';
+import { fetchUserData } from '../services/githubService';
 
-const Search = () => {
+// Basic styling using Tailwind CSS for a cleaner look
+const containerClass = "p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4";
+const inputClass = "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500";
+const buttonClass = "w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-150";
+const resultCardClass = "mt-6 p-4 border border-gray-200 rounded-lg text-center space-y-4";
+
+function Search() {
   const [username, setUsername] = useState('');
-  const [location, setLocation] = useState('');
-  const [minRepos, setMinRepos] = useState('');
-  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
+  // Handler for the form submission
+  const handleSearch = useCallback(async (e) => {
     e.preventDefault();
+    if (!username.trim()) return; // Prevent search on empty input
 
+    setUser(null);
+    setError(null);
     setLoading(true);
-    setError('');
-    setUsers([]);
 
     try {
-      // Use fetchUserData instead of fetchUsers
-      const usersList = await fetchUserData({ username, location, minRepos });
-      if (usersList && usersList.length > 0) {
-        setUsers(usersList);
-      } else {
-        setError("No users found matching your criteria.");
-      }
+      const userData = await fetchUserData(username.trim());
+      setUser(userData);
     } catch (err) {
-      setError(err.message || 'An error occurred. Please try again.');
+      // The error message comes from the service function
+      setError(err.message);
     } finally {
       setLoading(false);
+      // Optional: Clear input after search
+      // setUsername(''); 
     }
+  }, [username]);
+
+
+  // Conditional Rendering Logic
+  const renderResults = () => {
+    if (loading) {
+      return (
+        <p className="text-center text-blue-600 font-semibold mt-4">
+          Loading...
+        </p>
+      );
+    }
+
+    if (error) {
+      return (
+        <p className="text-center text-red-600 font-semibold mt-4">
+          {error}
+        </p>
+      );
+    }
+
+    if (user) {
+      return (
+        <div className={resultCardClass}>
+          {/* User Avatar */}
+          <img 
+            src={user.avatar_url} 
+            alt={`${user.login}'s avatar`} 
+            className="w-24 h-24 rounded-full mx-auto shadow-md"
+          />
+          
+          {/* User Name/Login */}
+          <h2 className="text-xl font-bold text-gray-800">
+            {user.name || user.login}
+          </h2>
+          
+          {/* Link to GitHub Profile */}
+          <a 
+            href={user.html_url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-500 hover:text-blue-700 transition duration-150 block"
+          >
+            View GitHub Profile
+          </a>
+          
+          {/* Optional: Bio/Followers for richer display */}
+          {user.bio && <p className="text-gray-600 italic">{user.bio}</p>}
+        </div>
+      );
+    }
+
+    return (
+      <p className="text-center text-gray-500 mt-4">
+        Enter a GitHub username to search.
+      </p>
+    );
   };
 
   return (
-    <div className="p-4">
-      <form onSubmit={handleSubmit} className="p-4 bg-gray-100 rounded-lg shadow-md">
-        <div className="flex flex-col md:flex-row md:space-x-4">
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
-            className="flex-1 p-2 border rounded-md mb-2 md:mb-0"
-          />
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Location (e.g., Nigeria)"
-            className="flex-1 p-2 border rounded-md mb-2 md:mb-0"
-          />
-          <input
-            type="number"
-            value={minRepos}
-            onChange={(e) => setMinRepos(e.target.value)}
-            placeholder="Min. Repositories"
-            className="w-full md:w-auto p-2 border rounded-md"
-          />
-        </div>
-        <button type="submit" disabled={loading} className="mt-4 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
-          {loading ? "Searching..." : "Advanced Search"}
+    <div className={containerClass}>
+      <h1 className="text-2xl font-bold text-center text-gray-800">
+        GitHub User Search
+      </h1>
+      
+      {/* Search Input Form */}
+      <form onSubmit={handleSearch} className="space-y-3">
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter GitHub username (e.g., torvalds)"
+          className={inputClass}
+          aria-label="GitHub username search input"
+        />
+        <button type="submit" className={buttonClass} disabled={loading}>
+          {loading ? 'Searching...' : 'Search'}
         </button>
       </form>
-      
-      {loading && <p className="mt-4 text-gray-600 text-center">Loading...</p>}
-      {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
 
-      {users.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {users.map(user => (
-            <div key={user.id} className="p-4 border rounded-lg shadow-sm text-center">
-              <img src={user.avatar_url} alt={`${user.login}'s avatar`} className="w-16 h-16 rounded-full mx-auto mb-2" />
-              <h3 className="text-lg font-semibold">{user.login}</h3>
-              <a href={user.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                View Profile
-              </a>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Display Search Results/Status */}
+      {renderResults()}
     </div>
   );
-};
+}
 
 export default Search;
