@@ -10,7 +10,8 @@ const GITHUB_API_BASE_URL = 'https://api.github.com/users/';
  */
 export const fetchUserData = async (username) => {
   if (!username) {
-    throw new Error("Username cannot be empty.");
+    // Throwing a simple error for empty search, which will be caught below
+    throw new Error("Username cannot be empty."); 
   }
 
   // Construct the full API URL
@@ -24,9 +25,9 @@ export const fetchUserData = async (username) => {
     return response.data;
   } catch (error) {
     // GitHub API returns 404 for "User not found"
-    // We check for the error response status to provide a specific message
     if (error.response && error.response.status === 404) {
-      throw new Error("Looks like we can't find the user.");
+      // **CORRECTED:** Throws the required message with "cant"
+      throw new Error("Looks like we cant find the user");
     }
     
     // For other errors (e.g., network issues, rate limiting)

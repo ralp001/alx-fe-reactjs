@@ -16,7 +16,11 @@ function Search() {
   // Handler for the form submission
   const handleSearch = useCallback(async (e) => {
     e.preventDefault();
-    if (!username.trim()) return; // Prevent search on empty input
+    if (!username.trim()) {
+      setError("Please enter a username.");
+      setUser(null);
+      return;
+    }
 
     setUser(null);
     setError(null);
@@ -26,12 +30,11 @@ function Search() {
       const userData = await fetchUserData(username.trim());
       setUser(userData);
     } catch (err) {
-      // The error message comes from the service function
+      // Catches the specific "Looks like we cant find the user" error 
+      // or the "An error occurred" message from the service.
       setError(err.message);
     } finally {
       setLoading(false);
-      // Optional: Clear input after search
-      // setUsername(''); 
     }
   }, [username]);
 
@@ -40,6 +43,7 @@ function Search() {
   const renderResults = () => {
     if (loading) {
       return (
+        // **REQUIRED:** Loading message
         <p className="text-center text-blue-600 font-semibold mt-4">
           Loading...
         </p>
@@ -48,6 +52,7 @@ function Search() {
 
     if (error) {
       return (
+        // Displays the error message, including "Looks like we cant find the user"
         <p className="text-center text-red-600 font-semibold mt-4">
           {error}
         </p>
