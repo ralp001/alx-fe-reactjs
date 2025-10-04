@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import recipeData from '../data.json';
 
-// RecipeCard component with navigation
+// RecipeCard component with Link navigation
 const RecipeCard = ({ recipe }) => {
   const [imageError, setImageError] = useState(false);
-  const navigate = useNavigate();
 
   const handleImageError = () => {
     setImageError(true);
-  };
-
-  const handleViewRecipe = () => {
-    navigate(`/recipe/${recipe.id}`);
   };
 
   return (
@@ -44,12 +39,12 @@ const RecipeCard = ({ recipe }) => {
         
         {/* Action Buttons */}
         <div className="flex justify-between items-center">
-          <button 
-            onClick={handleViewRecipe}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition duration-200"
+          <Link 
+            to={`/recipe/${recipe.id}`}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition duration-200 inline-block"
           >
             View Recipe
-          </button>
+          </Link>
           <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
             ⭐ 4.5
           </span>
