@@ -64,16 +64,16 @@ const HomePage = () => {
       <div className="container mx-auto px-4">
         {/* Header Section */}
         <header className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-orange-600 mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-orange-600 mb-4">
             🍳 Recipe Sharing Platform
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto">
             Discover amazing recipes from our community. Share your culinary creations and inspire others!
           </p>
         </header>
 
-        {/* Recipe Grid Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Recipe Grid Section with Complete Responsive Breakpoints */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {recipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
@@ -87,8 +87,8 @@ const HomePage = () => {
         )}
 
         {/* Add Recipe Button */}
-        <div className="text-center mt-12">
-          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition duration-300">
+        <div className="text-center mt-8 md:mt-12">
+          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 md:px-8 rounded-full text-base md:text-lg shadow-lg hover:shadow-xl transition duration-300">
             + Add Your Recipe
           </button>
         </div>
