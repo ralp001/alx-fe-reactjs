@@ -1,84 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-// Mock recipe data with working image URLs
-const recipeData = [
-  {
-    "id": 1,
-    "title": "Spaghetti Carbonara",
-    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
-    "image": "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 2,
-    "title": "Chicken Tikka Masala",
-    "summary": "Chunks of grilled chicken cooked in a smooth buttery & creamy tomato based gravy.",
-    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 3,
-    "title": "Vegetable Stir Fry",
-    "summary": "Quick and healthy vegetable stir fry with amazing flavors and colorful veggies.",
-    "image": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 4,
-    "title": "Chocolate Lava Cake",
-    "summary": "Decadent chocolate cake with a warm, gooey center that flows like lava.",
-    "image": "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 5,
-    "title": "Greek Salad",
-    "summary": "Fresh and healthy salad with cucumbers, tomatoes, olives, and feta cheese.",
-    "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 6,
-    "title": "Beef Tacos",
-    "summary": "Crispy taco shells filled with seasoned beef, lettuce, cheese, and salsa.",
-    "image": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=300&fit=crop"
-  }
-];
-
-// Alternative: Use placeholder images as backup
-const recipeDataWithPlaceholders = [
-  {
-    "id": 1,
-    "title": "Spaghetti Carbonara",
-    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
-    "image": "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 2,
-    "title": "Chicken Tikka Masala",
-    "summary": "Chunks of grilled chicken cooked in a smooth buttery & creamy tomato based gravy.",
-    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 3,
-    "title": "Vegetable Stir Fry",
-    "summary": "Quick and healthy vegetable stir fry with amazing flavors and colorful veggies.",
-    "image": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 4,
-    "title": "Chocolate Lava Cake",
-    "summary": "Decadent chocolate cake with a warm, gooey center that flows like lava.",
-    "image": "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 5,
-    "title": "Greek Salad",
-    "summary": "Fresh and healthy salad with cucumbers, tomatoes, olives, and feta cheese.",
-    "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop"
-  },
-  {
-    "id": 6,
-    "title": "Beef Tacos",
-    "summary": "Crispy taco shells filled with seasoned beef, lettuce, cheese, and salsa.",
-    "image": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=300&fit=crop"
-  }
-];
+import recipeData from '../data.json';
 
 // RecipeCard component with image error handling
 const RecipeCard = ({ recipe }) => {
@@ -134,8 +55,8 @@ const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    // Load recipe data - using the version with working images
-    setRecipes(recipeDataWithPlaceholders);
+    // Load recipe data from the external JSON file
+    setRecipes(recipeData);
   }, []);
 
   return (
