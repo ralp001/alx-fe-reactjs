@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import recipeData from '../data.json';
 
-// RecipeCard component with image error handling
+// RecipeCard component with navigation
 const RecipeCard = ({ recipe }) => {
   const [imageError, setImageError] = useState(false);
+  const navigate = useNavigate();
 
   const handleImageError = () => {
     setImageError(true);
+  };
+
+  const handleViewRecipe = () => {
+    navigate(`/recipe/${recipe.id}`);
   };
 
   return (
@@ -38,7 +44,10 @@ const RecipeCard = ({ recipe }) => {
         
         {/* Action Buttons */}
         <div className="flex justify-between items-center">
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition duration-200">
+          <button 
+            onClick={handleViewRecipe}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition duration-200"
+          >
             View Recipe
           </button>
           <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
@@ -55,7 +64,6 @@ const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    // Load recipe data from the external JSON file
     setRecipes(recipeData);
   }, []);
 
@@ -72,7 +80,7 @@ const HomePage = () => {
           </p>
         </header>
 
-        {/* Recipe Grid Section with Complete Responsive Breakpoints */}
+        {/* Recipe Grid Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {recipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />
